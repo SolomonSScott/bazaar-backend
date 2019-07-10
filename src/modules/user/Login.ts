@@ -24,7 +24,7 @@ export class LoginResolver {
 			return null;
 		}
 
-		ctx.req.cookies.token = jwt.sign( { userID: user.id }, process.env.APP_SECRET! );
+		ctx.req.session!.token = jwt.sign( { userID: user.id }, process.env.APP_SECRET! );
 
 		return user;
 	}
