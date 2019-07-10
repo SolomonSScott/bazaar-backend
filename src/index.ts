@@ -23,9 +23,15 @@ const app = async () => {
 	const app = Express();
 
 	app.use(session({
+		name: "qid",
 		secret: process.env.APP_SECRET!,
 		resave: false,
 		saveUninitialized: true,
+		cookie: {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
+		}
 	}));
 
 	apolloServer.applyMiddleware({ app });
