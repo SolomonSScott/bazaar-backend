@@ -1,5 +1,7 @@
 import { Request } from 'express';
+import { Connection } from 'typeorm'
 
 export interface AppContext {
-	req: Request;
+	req: Request,
+	connection: Connection
 }

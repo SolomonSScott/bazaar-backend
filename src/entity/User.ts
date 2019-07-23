@@ -1,6 +1,6 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Recipe } from './Recipe';
 import { Field, ObjectType } from 'type-graphql';
+import { Recipe } from './Recipe';
 
 @ObjectType()
 @Entity()

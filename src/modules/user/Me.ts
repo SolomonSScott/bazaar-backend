@@ -13,7 +13,7 @@ export class MeResolver {
 			return undefined;
 		}
 
-		const token: any = jwt.verify( ctx.req.session!.token, process.env.APP_SECRET! );
+		const token: any = await jwt.verify( ctx.req.session!.token, process.env.APP_SECRET! );
 
 		const user = await User.findOne( token.userID );
 
