@@ -20,7 +20,7 @@ export class CreateRecipeResolver {
 	): Promise<Recipe | null> {
 		const token: any = await jwt.verify( ctx.req.session!.token, process.env.APP_SECRET! );
 
-		if ( !token ) {
+		if ( ! token ) {
 			return null;
 		}
 
@@ -30,16 +30,16 @@ export class CreateRecipeResolver {
 			return null;
 		}
 
-		const ingredients = ingredients_list.map(async function(item) {
+		const ingredients = await Promise.all(ingredients_list.map(async function(item) {
 			const ingredient = await Ingredient.findOne({ where: { name: item.name }});
 			if ( ! ingredient ) {
-				const ingredient = new Ingredient;
-				ingredient.name = item.name;
-				await ctx.connection.manager.save(ingredient);
+				const ingredient = await Ingredient.create({
+					name: item.name
+				}).save();
 				return ingredient;
 			}
 			return ingredient;
-		});
+		}));
 
 		const recipeRepo = ctx.connection.getRepository(Recipe);
 
@@ -49,7 +49,7 @@ export class CreateRecipeResolver {
 		recipe.featured_image = featured_image;
 		recipe.instructions = instructions;
 		recipe.user = user;
-		recipe.ingredients = ingredients;
+		recipe.ingredients = Promise.resolve(ingredients);
 
 		await recipeRepo.save(recipe);
 
