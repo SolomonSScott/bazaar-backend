@@ -27,7 +27,9 @@ export class Recipe extends BaseEntity {
 	instructions: string
 
 	@Field(() => User, { nullable: true })
-	@ManyToOne(() => User, user => user.recipes)
+	@ManyToOne(() => User, user => user.recipes, {
+		eager: true
+	})
 	user: User;
 
 	@Field(() => [Ingredient], { nullable: true })

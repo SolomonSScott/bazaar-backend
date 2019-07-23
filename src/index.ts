@@ -4,18 +4,13 @@ import Express from 'express';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import session from 'express-session';
-import { RegisterResolver } from './modules/user/Register';
-import { LoginResolver } from './modules/user/Login';
-import { MeResolver } from './modules/user/Me';
-import { CreateRecipeResolver } from './modules/recipe/Create';
-import { RecipesResolver } from './modules/recipe/Recipes';
-import { DeleteRecipesResolver } from './modules/recipe/Delete';
+import resolvers from './schema';
 
 const app = async () => {
 	const connection = await createConnection();
 
 	const schema = await buildSchema({
-		resolvers: [RegisterResolver, LoginResolver, MeResolver, CreateRecipeResolver, RecipesResolver, DeleteRecipesResolver],
+		resolvers,
 	});
 
 	const apolloServer = new ApolloServer({
