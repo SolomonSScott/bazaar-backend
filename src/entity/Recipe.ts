@@ -2,6 +2,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMa
 import { ObjectType, Field } from 'type-graphql';
 import { User } from './User';
 import { Ingredient } from './Ingredient';
+import { Category } from '../types/Category';
 
 @ObjectType()
 @Entity()
@@ -25,6 +26,14 @@ export class Recipe extends BaseEntity {
 	@Field()
 	@Column()
 	instructions: string
+
+	@Field()
+	@Column()
+	cooking_time: number
+
+	@Field(() => Category)
+	@Column()
+	category: Category
 
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, user => user.recipes, {

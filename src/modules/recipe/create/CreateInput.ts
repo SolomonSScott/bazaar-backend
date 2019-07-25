@@ -1,4 +1,5 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from 'type-graphql';
+import { Category } from '../../../types/Category';
 
 @InputType()
 export class CreateRecipeInput {
@@ -13,4 +14,10 @@ export class CreateRecipeInput {
 
 	@Field()
 	instructions: string;
+
+	@Field()
+	cooking_time: number
+
+	@Field(() => Category)
+	category: Category
 }

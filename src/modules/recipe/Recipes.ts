@@ -9,12 +9,21 @@ export class RecipesResolver {
 	async recipes(
 		@Args() {
 			skip,
-			take
+			take,
+			category
 		}: RecipeArgs
 	): Promise<Recipe[]> {
+		const where: any = [];
+		if ( category ) {
+			where.push({ category: category });
+		}
+
+		console.log(where);
+
 		const connection = await getConnection();
 		const recipes = await connection.getRepository(Recipe).find({
 			relations: ['user', 'ingredients'],
+			where,
 			skip,
 			take,
 		});

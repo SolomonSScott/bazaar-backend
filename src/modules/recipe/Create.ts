@@ -14,6 +14,8 @@ export class CreateRecipeResolver {
 		description,
 		featured_image,
 		instructions,
+		cooking_time,
+		category
 	}: CreateRecipeInput,
 	@Arg('ingredients', () => [IngredientInput]) ingredients_list: Ingredient[],
 	@Ctx() ctx: AppContext
@@ -29,6 +31,8 @@ export class CreateRecipeResolver {
 		if ( ! user ) {
 			return null;
 		}
+
+		console.log(category);
 
 		const ingredients = await Promise.all(ingredients_list.map(async function(item) {
 			const ingredient = await Ingredient.findOne({ where: { name: item.name }});
@@ -48,6 +52,8 @@ export class CreateRecipeResolver {
 		recipe.description = description;
 		recipe.featured_image = featured_image;
 		recipe.instructions = instructions;
+		recipe.cooking_time = cooking_time;
+		recipe.category = category;
 		recipe.user = user;
 		recipe.ingredients = Promise.resolve(ingredients);
 
