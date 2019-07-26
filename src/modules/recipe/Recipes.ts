@@ -15,10 +15,8 @@ export class RecipesResolver {
 	): Promise<Recipe[]> {
 		const where: any = [];
 		if ( category ) {
-			where.push({ category: category });
+			where.push({ category });
 		}
-
-		console.log(where);
 
 		const connection = await getConnection();
 		const recipes = await connection.getRepository(Recipe).find({
