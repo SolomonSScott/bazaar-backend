@@ -1,7 +1,5 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
-import jwt from 'jsonwebtoken';
 import { Recipe } from "../../entity/Recipe";
-import { User } from "../../entity/User";
 import { CreateRecipeInput } from "./create/CreateInput";
 import { AppContext } from "../../types/AppContext";
 import { IngredientInput, Ingredient } from "../../entity/Ingredient";
@@ -20,19 +18,9 @@ export class CreateRecipeResolver {
 	@Arg('ingredients', () => [IngredientInput]) ingredients_list: Ingredient[],
 	@Ctx() ctx: AppContext
 	): Promise<Recipe | null> {
-		const token: any = await jwt.verify( ctx.req.session!.token, process.env.APP_SECRET! );
-
-		if ( ! token ) {
+		if ( ! ctx.user ) {
 			return null;
 		}
-
-		const user = await User.findOne( token.userID );
-
-		if ( ! user ) {
-			return null;
-		}
-
-		console.log(category);
 
 		const ingredients = await Promise.all(ingredients_list.map(async function(item) {
 			const ingredient = await Ingredient.findOne({ where: { name: item.name }});
@@ -54,7 +42,7 @@ export class CreateRecipeResolver {
 		recipe.instructions = instructions;
 		recipe.cooking_time = cooking_time;
 		recipe.category = category;
-		recipe.user = user;
+		recipe.user = ctx.user;
 		recipe.ingredients = Promise.resolve(ingredients);
 
 		await recipeRepo.save(recipe);

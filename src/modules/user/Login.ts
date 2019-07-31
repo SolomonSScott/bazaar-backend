@@ -1,17 +1,17 @@
-import { Resolver, Mutation, Arg, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg } from 'type-graphql';
 import bcrypt from 'bcryptjs';
+import { plainToClass } from 'class-transformer';
 import jwt from 'jsonwebtoken';
 import { User } from '../../entity/User';
-import { AppContext } from '../../types/AppContext';
+import { Login } from '../../types/Login';
 
 @Resolver()
 export class LoginResolver {
-	@Mutation(() => User)
+	@Mutation(() => Login)
 	async login(
 		@Arg('email') email: string,
 		@Arg('password') password: string,
-		@Ctx() ctx: AppContext
-	): Promise<User | null> {
+	): Promise<Login | null> {
 		const user = await User.findOne( { where: { email } } );
 
 		if ( ! user ) {
@@ -24,8 +24,13 @@ export class LoginResolver {
 			return null;
 		}
 
-		ctx.req.session!.token = jwt.sign( { userID: user.id }, process.env.APP_SECRET! );
+		const token = jwt.sign( { userID: user.id }, process.env.APP_SECRET!, { expiresIn: '30d' } );
 
-		return user;
+		const data = plainToClass( Login, {
+			token,
+			user
+		} );
+
+		return data;
 	}
 }

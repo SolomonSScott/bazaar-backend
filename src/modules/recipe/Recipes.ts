@@ -10,12 +10,17 @@ export class RecipesResolver {
 		@Args() {
 			skip,
 			take,
-			category
+			category,
+			user_id
 		}: RecipeArgs
 	): Promise<Recipe[]> {
 		const where: any = [];
 		if ( category ) {
 			where.push({ category });
+		}
+
+		if ( user_id ) {
+			where.push({ user: user_id });
 		}
 
 		const connection = await getConnection();

@@ -11,4 +11,7 @@ export class RecipeArgs {
 
 	@Field(() => Category, { nullable: true })
 	category: Category
+
+	@Field({ nullable: true })
+	user_id: number
 }

@@ -1,7 +1,10 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Connection } from 'typeorm'
+import { User } from '../entity/User';
 
 export interface AppContext {
 	req: Request,
-	connection: Connection
+	res: Response,
+	connection: Connection,
+	user: User
 }

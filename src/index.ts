@@ -3,8 +3,8 @@ import { ApolloServer } from 'apollo-server-express';
 import Express from 'express';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
-import session from 'express-session';
 import resolvers from './schema';
+import { verifyToken } from './helpers/verifyToken';
 
 const app = async () => {
 	const connection = await createConnection();
@@ -15,22 +15,20 @@ const app = async () => {
 
 	const apolloServer = new ApolloServer({
 		schema,
-		context: ({req}: any) => ({ req, connection })
+		context: async ({ req, res }: any) => {
+			let user = null;
+			if ('authorization' in req.headers ) {
+				const token = req.headers['authorization'].replace('Bearer: ', '');
+				user = await verifyToken( token );
+			}
+
+			return {
+				req, res, connection, user
+			}
+		}
 	});
 
 	const app = Express();
-
-	app.use(session({
-		name: "qid",
-		secret: process.env.APP_SECRET!,
-		resave: false,
-		saveUninitialized: true,
-		cookie: {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
-		}
-	}));
 
 	apolloServer.applyMiddleware({ app });
 
