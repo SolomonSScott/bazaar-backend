@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { ObjectType, Field, InputType, Ctx, ID } from 'type-graphql';
+import { ObjectType, Field, InputType, Ctx } from 'type-graphql';
 import { Recipe } from './Recipe';
 import { RecipeToIngredient } from './RecipeToIngredient';
 import { AppContext } from '../types/AppContext';
@@ -7,7 +7,7 @@ import { AppContext } from '../types/AppContext';
 @ObjectType()
 @Entity()
 export class Ingredient extends BaseEntity {
-	@Field(() => ID)
+	@Field()
 	@PrimaryGeneratedColumn()
 	id: number;
 

@@ -1,6 +1,6 @@
-import { Resolver, Query, Arg, Args } from "type-graphql";
-import { getConnection } from "typeorm";
-import { Recipe } from "../../entity/Recipe";
+import { Resolver, Query, Arg, Args } from 'type-graphql';
+import { getConnection } from 'typeorm';
+import { Recipe } from '../../entity/Recipe';
 import { RecipeArgs } from './recipes/RecipeArgs';
 
 @Resolver()
