@@ -1,8 +1,8 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import { User } from './User';
-import { Ingredient } from './Ingredient';
 import { Category } from '../types/Category';
+import { RecipeToIngredient } from './RecipeToIngredient';
 
 @ObjectType()
 @Entity()
@@ -41,12 +41,11 @@ export class Recipe extends BaseEntity {
 	})
 	user: User;
 
-	@Field(() => [Ingredient], { nullable: true })
-	@ManyToMany(() => Ingredient, ingredient => ingredient.recipes, {
+	@Field(() => [RecipeToIngredient], { nullable: true })
+	@OneToMany(() => RecipeToIngredient, (recipeToIngredients) => recipeToIngredients.recipe, {
 		eager: true,
 		lazy: true,
 		cascade: true
 	})
-	@JoinTable()
-	ingredients: Promise<Ingredient[]>;
+	recipeToIngredients: Promise<RecipeToIngredient[]>;
 }

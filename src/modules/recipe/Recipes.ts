@@ -25,7 +25,7 @@ export class RecipesResolver {
 
 		const connection = await getConnection();
 		const recipes = await connection.getRepository(Recipe).find({
-			relations: ['user', 'ingredients'],
+			relations: ['user', 'recipeToIngredients', 'recipeToIngredients.ingredient'],
 			where,
 			skip,
 			take,
@@ -38,7 +38,10 @@ export class RecipesResolver {
 	async recipe(
 		@Arg('id') id: number
 	): Promise<Recipe | undefined> {
-		const recipe = await Recipe.findOne( id );
+		const connection = await getConnection();
+		const recipe = await connection.getRepository(Recipe).findOne( id, {
+			relations: ['user', 'recipeToIngredients']
+		});
 
 		if ( ! recipe ) {
 			return undefined;

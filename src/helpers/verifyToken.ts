@@ -14,7 +14,7 @@ export const verifyToken = async ( token: string ) => {
 		if ( err ) {
 			throw new Error('Invalid token!')
 		} else {
-			user = await User.findOne( data.userID );
+			user = await User.findOne( data.userID, { relations: ['recipes'] } );
 		}
 	});
 	if ( ! user ) {

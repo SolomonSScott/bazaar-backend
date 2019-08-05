@@ -5,6 +5,7 @@ import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import resolvers from './schema';
 import { verifyToken } from './helpers/verifyToken';
+import { createRecipeLoader } from './helpers/recipeLoader';
 
 const app = async () => {
 	const connection = await createConnection();
@@ -23,7 +24,11 @@ const app = async () => {
 			}
 
 			return {
-				req, res, connection, user
+				req,
+				res,
+				connection,
+				user,
+				recipeLoader: createRecipeLoader()
 			}
 		}
 	});
